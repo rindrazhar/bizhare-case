@@ -46,26 +46,40 @@ export default {
   data() {
     return {
       resultsData: [],
+      categoryData: [],
     };
   },
   methods: {
     getData() {
-      const json = JSON.stringify({ size: 12, page: 1, listCategory: [] });
+      const item = JSON.stringify({
+        size: 0,
+        page: 0,
+        listCategory: [],
+      });
       axios
-        .get("https://api.bizhare.id/v2/business/parent/all", json, {
+        .post("http://sandbox.bizharedev.id:17001/business/parent/all", item, {
           headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
+            "content-type": "application/json",
           },
         })
         .then((res) => {
-          // this.resultsData = res.data;
-          console.log(res);
+          this.resultsData = res.data.data;
+          console.log("data", this.resultsData);
+        });
+    },
+
+    getCategory() {
+      axios
+        .get("http://sandbox.bizharedev.id:17001/media/param/business/category")
+        .then((res) => {
+          this.categoryData = res.data.data;
+          console.log("data", this.categoryData);
         });
     },
 
     created() {
       this.getData();
+      this.getCategory();
     },
   },
 };
